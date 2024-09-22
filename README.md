@@ -1,4 +1,7 @@
 # TRec
+Screen and audio recording program
+## Bugs
+[] Fix synchronizing audio and video
 ## How to run
 1. install packages
 ```
