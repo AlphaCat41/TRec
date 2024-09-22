@@ -43,9 +43,6 @@ class TRec:
         self.chk_mic_btn = Checkbutton(self.window, text='microphone', variable=self.hasMic)
         self.chk_mic_btn.grid(row=0, column=0, padx=5)
       
-    def get_timestamp():
-        return time.time()
-    
     def start_recording(self):
         self.start_btn.config(state=tk.DISABLED)
         self.stop_btn.config(state=tk.ACTIVE)
@@ -154,7 +151,7 @@ class TRec:
         self.output_file = os.path.join(self.save_dir, "output_video.mp4")     
         ffmpeg_path = os.getcwd() + "/ffmpeg/bin/ffmpeg.exe"
 
-        command = f'"{ffmpeg_path}" -y -i "{self.video_file}" -i "{self.audio_file}" -c:v copy -c:a aac "{self.output_file}"' # -y for overwrite
+        command = f'"{ffmpeg_path}" -y -i "{self.video_file}" -i "{self.audio_file}" -c:v copy -c:a aac "{self.output_file}"' # -y for overwrite video & audio
 
         try:
             subprocess.run(command, shell=True, check=True)
