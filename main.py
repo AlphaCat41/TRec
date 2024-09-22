@@ -17,6 +17,7 @@ class TRec:
         window.title('VidRec')
         window.geometry("400x100")
         self.fps = 10
+        self.frame_time = 1 / self.fps
 
         self.isRecording = None 
 
@@ -72,7 +73,7 @@ class TRec:
             self.save_all_recording()
             if self.hasMic.get():
                 self.merge_audio_video()
-                
+
             self.isRecording = False
             self.screen_frames = []
             self.audio_frames = []    
@@ -85,9 +86,14 @@ class TRec:
 
     def record_screen(self):
         while self.isRecording:
+            start_time = time.time()
+
             screenshot = ImageGrab.grab()  # Capture the screen
             self.screen_frames.append(screenshot)  # Save the screenshot as frames
-            time.sleep(1 / self.fps)  # Adjust the frame rate if needed (here ~10 FPS)
+
+            diff_time = time.time() - start_time
+            if diff_time < self.frame_time: # Ensure 10 FPS
+                time.sleep(self.frame_time - diff_time)
 
     def record_audio(self):
         # PyAudio setup
@@ -104,15 +110,23 @@ class TRec:
                         frames_per_buffer=chunk)
         
         while self.isRecording:
+            start_time = time.time()
+
             data = stream.read(chunk)
             self.audio_frames.append(data)
-        
+
+            diff_time = time.time() - start_time
+          
+            if diff_time > chunk / rate:
+                time.sleep(diff_time - (chunk / rate))
+
         # Stop and close the stream
         stream.stop_stream()
         stream.close()
         p.terminate()
 
     def save_all_recording(self):
+        self.isRecording = False
         
         if self.hasMic.get():
             self.audio_file = os.path.join(self.save_dir, "audio.wav")

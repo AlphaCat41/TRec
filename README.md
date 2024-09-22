@@ -1,7 +1,7 @@
 # TRec
 Screen and audio recording program
 ## Bugs
-- [ ] Fix unsynchronized between audio and video
+- [x] Fix unsynchronized between audio and video
 ## How to run
 1. install packages
 ```
