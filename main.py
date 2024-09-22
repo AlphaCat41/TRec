@@ -5,7 +5,7 @@ class TRec:
         self.window = window
         window.title('VidRec')
         window.geometry("400x100") 
-        self.isRecord = False
+        self.isRecording = False
         self.video_frames = [] 
         self.audio_frames = []      
 
@@ -19,7 +19,7 @@ class TRec:
         self.save_btn.grid(row=1, column=3, padx=5)
 
     def start_recording(self):
-        self.isRecord = True
+        self.isRecording = True
         self.start_btn.config(state=tk.DISABLED)
         self.stop_btn.config(state=tk.ACTIVE)
 
