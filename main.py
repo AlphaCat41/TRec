@@ -1,12 +1,12 @@
 import tkinter as tk
-
+import threading
 class TRec:
     def __init__(self, window):
         self.window = window
         window.title('VidRec')
         window.geometry("400x100") 
         self.isRecording = False
-        self.video_frames = [] 
+        self.screen_frames = [] 
         self.audio_frames = []      
 
         self.start_btn = tk.Button(window, text='Start', width=10, command=self.start_recording)
@@ -19,9 +19,10 @@ class TRec:
         self.save_btn.grid(row=1, column=3, padx=5)
 
     def start_recording(self):
-        self.isRecording = True
         self.start_btn.config(state=tk.DISABLED)
         self.stop_btn.config(state=tk.ACTIVE)
+
+        self.isRecording = True
 
     def stop_recording(self):
         self.isRecord = False
@@ -31,7 +32,7 @@ class TRec:
     def save_recording(self):
         self.start_btn.config(state=tk.ACTIVE)
         self.stop_btn.config(state=tk.ACTIVE)
-        self.video_frames = []
+        self.screen_frames = []
         self.audio_frames = []
 
 if __name__ == "__main__":
