@@ -2,6 +2,8 @@
 Screen and audio recording program
 ## Bugs
 - [x] Fix unsynchronized between audio and video
+## Dependencies
+1. FFmpeg (https://phoenixnap.com/kb/ffmpeg-windows) Extract in TRec folder
 ## How to run
 1. install packages
 ```
