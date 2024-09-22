@@ -5,6 +5,7 @@ import threading
 import time
 import cv2
 import numpy as np
+
 class TRec:
     def __init__(self, window):
         self.window = window
