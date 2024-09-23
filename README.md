@@ -1,8 +1,8 @@
 # TRec
 Screen and audio recording program
 ## Bugs
-- [X] Unsynchronized between audio and video
-- [ ] Cannot record sound in screen
+- [ ] Unsynchronized between audio and video
+- [x] Cannot record sound in screen
 ## Dependencies
 1. FFmpeg (https://phoenixnap.com/kb/ffmpeg-windows) Extract in TRec folder
 ## How to run
