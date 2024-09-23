@@ -14,7 +14,7 @@ class TRec:
     def __init__(self, window):
         self.window = window
 
-        window.title('VidRec')
+        window.title('TRec')
         window.geometry("400x100")
         self.fps = 10
         self.frame_time = 1 / self.fps
