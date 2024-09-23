@@ -24,9 +24,7 @@ class TRec:
 
         self.screen_frames = []   
         self.audio_frames = []
-        self.audio_timestamps = []
-        self.video_timestamps = [] 
-
+     
         self.final_file = None
         self.video_file = None
         self.audio_file = None
@@ -36,6 +34,7 @@ class TRec:
 
         self.stop_btn = tk.Button(window, text='Stop', width=10, command=self.stop_recording)
         self.stop_btn.grid(row=1, column=1, padx=5)
+        self.stop_btn.config(state=tk.DISABLED)
 
         self.save_btn = tk.Button(window, text='Save', width=10, command=self.save_recording)
         self.save_btn.grid(row=1, column=2, padx=5)
@@ -43,6 +42,7 @@ class TRec:
         self.hasMic = BooleanVar()
         self.chk_mic_btn = Checkbutton(self.window, text='microphone', variable=self.hasMic)
         self.chk_mic_btn.grid(row=0, column=0, padx=5)
+        self.stop_btn.config(state=tk.DISABLED)
       
     def start_recording(self):
         self.start_btn.config(state=tk.DISABLED)
@@ -96,6 +96,14 @@ class TRec:
 
         except Exception as e:
             tk.messagebox.showerror("Error",  f"{e}")
+
+            self.isRecording = False
+            self.screen_frames = []
+            self.audio_frames = []    
+            self.start_btn.config(state=tk.ACTIVE)
+            self.stop_btn.config(state=tk.ACTIVE)
+            self.chk_mic_btn.config(state=tk.ACTIVE)
+
             sys.exit(1)  # Exit with an error status
 
     def record_audio(self):
@@ -111,7 +119,7 @@ class TRec:
                             rate=rate,
                             input=True,
                             frames_per_buffer=chunk,
-                            input_device_index=7)
+                            input_device_index=4)
             
             while self.isRecording:
                 start_time = time.time()
@@ -126,10 +134,19 @@ class TRec:
 
         except Exception as e:
             tk.messagebox.showerror("Error",  f"{e}")
+
+            self.isRecording = False
+            self.screen_frames = []
+            self.audio_frames = []    
+            self.start_btn.config(state=tk.ACTIVE)
+            self.stop_btn.config(state=tk.ACTIVE)
+            self.chk_mic_btn.config(state=tk.ACTIVE)
+
             sys.exit(1)  # Exit with an error status
             
         finally:
             # Stop and close the stream
+            self.isRecording = False
             stream.stop_stream()
             stream.close()
             p.terminate()
@@ -159,7 +176,7 @@ class TRec:
                 out.write(cv2.cvtColor(frame_np, cv2.COLOR_RGB2BGR))
 
             out.release()
-            
+
         except Exception as e:
             tk.messagebox.showerror("Error",  f"{e}")
             sys.exit(1)  # Exit with an error status
@@ -174,7 +191,14 @@ class TRec:
             subprocess.run(command, shell=True, check=True)
 
         except subprocess.CalledProcessError as e:
-             tk.messagebox.showerror("Error",  f"{e}")
+            tk.messagebox.showerror("Error",  f"{e}")
+            
+            self.isRecording = False
+            self.screen_frames = []
+            self.audio_frames = []    
+            self.start_btn.config(state=tk.ACTIVE)
+            self.stop_btn.config(state=tk.ACTIVE)
+            self.chk_mic_btn.config(state=tk.ACTIVE)
 
 if __name__ == "__main__":
     window = tk.Tk()
