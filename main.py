@@ -9,6 +9,7 @@ import pyaudio
 import subprocess
 import os
 import wave
+import sys
 
 class TRec:
     def __init__(self, window):
@@ -82,15 +83,20 @@ class TRec:
 
 
     def record_screen(self):
-        while self.isRecording:
-            start_time = time.time()
+        try:
+            while self.isRecording:
+                start_time = time.time()
 
-            screenshot = ImageGrab.grab()  # Capture the screen
-            self.screen_frames.append(screenshot)  # Save the screenshot as frames
+                screenshot = ImageGrab.grab()  # Capture the screen
+                self.screen_frames.append(screenshot)  # Save the screenshot as frames
 
-            diff_time = time.time() - start_time
-            if diff_time < self.frame_time: # Ensure 10 FPS
-                time.sleep(self.frame_time - diff_time)
+                diff_time = time.time() - start_time
+                if diff_time < self.frame_time: # Ensure 10 FPS
+                    time.sleep(self.frame_time - diff_time)
+
+        except Exception as e:
+            tk.messagebox.showerror("Error",  f"{e}")
+            sys.exit(1)  # Exit with an error status
 
     def record_audio(self):
         # PyAudio setup
@@ -98,29 +104,35 @@ class TRec:
         format = pyaudio.paInt16  # 16 bits per sample
         channels = 2
         rate = 44100  # Record at 44100 samples per second
-        
-        p = pyaudio.PyAudio()
-        stream = p.open(format=format,
-                        channels=channels,
-                        rate=rate,
-                        input=True,
-                        frames_per_buffer=chunk)
-        
-        while self.isRecording:
-            start_time = time.time()
+        try:
+            p = pyaudio.PyAudio()
+            stream = p.open(format=format,
+                            channels=channels,
+                            rate=rate,
+                            input=True,
+                            frames_per_buffer=chunk,
+                            input_device_index=7)
+            
+            while self.isRecording:
+                start_time = time.time()
 
-            data = stream.read(chunk)
-            self.audio_frames.append(data)
+                data = stream.read(chunk)
+                self.audio_frames.append(data)
 
-            diff_time = time.time() - start_time
-          
-            if diff_time > chunk / rate:
-                time.sleep(diff_time - (chunk / rate))
+                diff_time = time.time() - start_time
+            
+                if diff_time > chunk / rate:
+                    time.sleep(diff_time - (chunk / rate))
 
-        # Stop and close the stream
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+        except Exception as e:
+            tk.messagebox.showerror("Error",  f"{e}")
+            sys.exit(1)  # Exit with an error status
+            
+        finally:
+            # Stop and close the stream
+            stream.stop_stream()
+            stream.close()
+            p.terminate()
 
     def save_all_recording(self):
         self.isRecording = False
