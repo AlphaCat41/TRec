@@ -112,14 +112,14 @@ class TRec:
         format = pyaudio.paInt16  # 16 bits per sample
         channels = 2
         rate = 44100  # Record at 44100 samples per second
+
         try:
             p = pyaudio.PyAudio()
             stream = p.open(format=format,
                             channels=channels,
                             rate=rate,
                             input=True,
-                            frames_per_buffer=chunk,
-                            input_device_index=4)
+                            frames_per_buffer=chunk)
             
             while self.isRecording:
                 start_time = time.time()
