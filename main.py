@@ -137,27 +137,32 @@ class TRec:
     def save_all_recording(self):
         self.isRecording = False
         
-        if self.hasMic.get():
-            self.audio_file = os.path.join(self.save_dir, "audio.wav")
+        try:
+            if self.hasMic.get():
+                self.audio_file = os.path.join(self.save_dir, "audio.wav")
+                
+                # Save recorded audio to a file
+                wf = wave.open(self.audio_file, 'wb')
+                wf.setnchannels(2)
+                wf.setsampwidth(pyaudio.PyAudio().get_sample_size(pyaudio.paInt16))
+                wf.setframerate(44100)
+                wf.writeframes(b''.join(self.audio_frames))
+                wf.close()
+
+            self.video_file = os.path.join(self.save_dir, "video.mp4")
+            frame = self.screen_frames[0]
+            width, height = frame.size
+            out = cv2.VideoWriter(self.video_file, cv2.VideoWriter_fourcc(*'mp4v'), 10, (width, height))
+
+            for frame in self.screen_frames:
+                frame_np = np.array(frame)
+                out.write(cv2.cvtColor(frame_np, cv2.COLOR_RGB2BGR))
+
+            out.release()
             
-            # Save recorded audio to a file
-            wf = wave.open(self.audio_file, 'wb')
-            wf.setnchannels(2)
-            wf.setsampwidth(pyaudio.PyAudio().get_sample_size(pyaudio.paInt16))
-            wf.setframerate(44100)
-            wf.writeframes(b''.join(self.audio_frames))
-            wf.close()
-
-        self.video_file = os.path.join(self.save_dir, "video.mp4")
-        frame = self.screen_frames[0]
-        width, height = frame.size
-        out = cv2.VideoWriter(self.video_file, cv2.VideoWriter_fourcc(*'mp4v'), 10, (width, height))
-
-        for frame in self.screen_frames:
-            frame_np = np.array(frame)
-            out.write(cv2.cvtColor(frame_np, cv2.COLOR_RGB2BGR))
-
-        out.release()
+        except Exception as e:
+            tk.messagebox.showerror("Error",  f"{e}")
+            sys.exit(1)  # Exit with an error status
 
     def merge_audio_video(self):
         self.output_file = os.path.join(self.save_dir, "output_video.mp4")     
@@ -169,7 +174,7 @@ class TRec:
             subprocess.run(command, shell=True, check=True)
 
         except subprocess.CalledProcessError as e:
-            print(f"Error occurred: {e}")
+             tk.messagebox.showerror("Error",  f"{e}")
 
 if __name__ == "__main__":
     window = tk.Tk()
