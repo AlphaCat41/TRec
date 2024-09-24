@@ -42,17 +42,25 @@ class TRec:
 
         self.save_btn = tk.Button(window, text='Save', width=10, command=self.save_recording)
         self.save_btn.grid(row=1, column=2, padx=5)
+        self.save_btn.config(state=tk.DISABLED)
 
         self.hasMic = BooleanVar()
-        self.chk_mic_btn = Checkbutton(self.window, text='microphone', variable=self.hasMic)
+        self.chk_mic_btn = Checkbutton(self.window, text='microphone', variable=self.hasMic, command=self.setStateCombobox)
         self.chk_mic_btn.grid(row=0, column=0, padx=5)
 
         self.combo_box = ttk.Combobox(window, values=self.list_audio_devices())
         self.combo_box.grid(row=0, column=1, padx=5)
+        self.combo_box.config(state= tk.DISABLED)
 
         self.timer_label = tk.Label(window, text="00:00:00", font=("Helvetica", 35))
         self.timer_label.grid(row=2, column=1, padx=5)
-        
+      
+    def setStateCombobox(self):
+        if self.hasMic.get():
+            self.combo_box.config(state= tk.ACTIVE)
+        else:
+            self.combo_box.config(state= tk.DISABLED)
+
     def updateTime(self):
         if self.isRecording:
             minutes = self.seconds // 60
@@ -77,6 +85,7 @@ class TRec:
         self.audio_frames = []    
         self.start_btn.config(state=tk.ACTIVE)
         self.stop_btn.config(state=tk.ACTIVE)
+        self.save_btn.config(state=tk.DISABLED)
         self.chk_mic_btn.config(state=tk.ACTIVE)
 
     def list_audio_devices(self):
@@ -93,6 +102,7 @@ class TRec:
     def start_recording(self):
         self.start_btn.config(state=tk.DISABLED)
         self.stop_btn.config(state=tk.ACTIVE)
+        self.save_btn.config(state=tk.ACTIVE)
         self.chk_mic_btn.config(state=tk.DISABLED)
 
         if self.hasMic.get():
@@ -116,6 +126,7 @@ class TRec:
         self.isRecording = False
         self.stop_btn.config(state=tk.DISABLED)
         self.start_btn.config(state=tk.ACTIVE)
+        self.save_btn.config(state=tk.ACTIVE)
 
     def save_recording(self):
         self.save_dir = filedialog.askdirectory(title="Select a directory to save recordings")
