@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import filedialog, BooleanVar, Checkbutton
 from PIL import ImageGrab
 import threading
@@ -43,8 +44,29 @@ class TRec:
         self.hasMic = BooleanVar()
         self.chk_mic_btn = Checkbutton(self.window, text='microphone', variable=self.hasMic)
         self.chk_mic_btn.grid(row=0, column=0, padx=5)
-        self.stop_btn.config(state=tk.DISABLED)
-      
+
+        self.combo_box = ttk.Combobox(window, values=self.list_audio_devices())
+        self.combo_box.grid(row=0, column=1, padx=5)
+        
+    def clear(self):
+        self.isRecording = False
+        self.screen_frames = []
+        self.audio_frames = []    
+        self.start_btn.config(state=tk.ACTIVE)
+        self.stop_btn.config(state=tk.ACTIVE)
+        self.chk_mic_btn.config(state=tk.ACTIVE)
+
+    def list_audio_devices(self):
+        devices = []
+        p = pyaudio.PyAudio()
+
+        for i in range(p.get_device_count()):
+            device_info = p.get_device_info_by_index(i)
+            if device_info['maxInputChannels'] > 0:  # Filter to show only input devices
+                devices.append(f"{i}: {device_info['name']}")
+
+        return devices
+
     def start_recording(self):
         self.start_btn.config(state=tk.DISABLED)
         self.stop_btn.config(state=tk.ACTIVE)
@@ -52,6 +74,12 @@ class TRec:
 
         if self.hasMic.get():
             # Start audio recording in a separate thread
+            if not self.combo_box.get():
+                tk.messagebox.showinfo("Info",  f"Please select audio device")
+                self.clear()
+                return
+            
+            self.input_device_index = int(self.combo_box.get().split(':')[0])
             audio_thread = threading.Thread(target=self.record_audio)
             audio_thread.start()
             
@@ -73,12 +101,7 @@ class TRec:
             if self.hasMic.get():
                 self.merge_audio_video()
 
-            self.isRecording = False
-            self.screen_frames = []
-            self.audio_frames = []    
-            self.start_btn.config(state=tk.ACTIVE)
-            self.stop_btn.config(state=tk.ACTIVE)
-            self.chk_mic_btn.config(state=tk.ACTIVE)
+            self.clear()
 
             tk.messagebox.showinfo("Info",  f"Video saved to '{self.save_dir}' successfully.")
 
@@ -98,12 +121,7 @@ class TRec:
         except Exception as e:
             tk.messagebox.showerror("Error",  f"{e}")
 
-            self.isRecording = False
-            self.screen_frames = []
-            self.audio_frames = []    
-            self.start_btn.config(state=tk.ACTIVE)
-            self.stop_btn.config(state=tk.ACTIVE)
-            self.chk_mic_btn.config(state=tk.ACTIVE)
+            self.clear()
 
             sys.exit(1)  # Exit with an error status
 
@@ -119,6 +137,7 @@ class TRec:
                             channels=channels,
                             rate=self.rate,
                             input=True,
+                            input_device_index=self.input_device_index,
                             frames_per_buffer=chunk)
             
             while self.isRecording:
@@ -135,12 +154,7 @@ class TRec:
         except Exception as e:
             tk.messagebox.showerror("Error",  f"{e}")
 
-            self.isRecording = False
-            self.screen_frames = []
-            self.audio_frames = []    
-            self.start_btn.config(state=tk.ACTIVE)
-            self.stop_btn.config(state=tk.ACTIVE)
-            self.chk_mic_btn.config(state=tk.ACTIVE)
+            self.clear()
 
             sys.exit(1)  # Exit with an error status
             
@@ -193,12 +207,7 @@ class TRec:
         except subprocess.CalledProcessError as e:
             tk.messagebox.showerror("Error",  f"{e}")
             
-            self.isRecording = False
-            self.screen_frames = []
-            self.audio_frames = []    
-            self.start_btn.config(state=tk.ACTIVE)
-            self.stop_btn.config(state=tk.ACTIVE)
-            self.chk_mic_btn.config(state=tk.ACTIVE)
+            self.clear()
 
 if __name__ == "__main__":
     window = tk.Tk()
