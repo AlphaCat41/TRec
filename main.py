@@ -129,8 +129,8 @@ class TRec:
 
                 diff_time = time.time() - start_time
             
-                if diff_time > chunk / rate:
-                    time.sleep(diff_time - (chunk / rate))
+                if diff_time > chunk / self.rate:
+                    time.sleep(diff_time - (chunk / self.rate))
 
         except Exception as e:
             tk.messagebox.showerror("Error",  f"{e}")
