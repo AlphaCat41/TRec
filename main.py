@@ -18,10 +18,11 @@ class TRec:
         self.window = window
 
         window.title('TRec')
-        window.geometry("400x100")
+        window.geometry("400x120")
         self.fps = 10
         self.rate = 44100  # Record at 44100 samples per second
         self.frame_time = 1 / self.fps
+        self.seconds = 0
 
         self.isRecording = None 
 
@@ -48,9 +49,30 @@ class TRec:
 
         self.combo_box = ttk.Combobox(window, values=self.list_audio_devices())
         self.combo_box.grid(row=0, column=1, padx=5)
+
+        self.timer_label = tk.Label(window, text="00:00:00", font=("Helvetica", 35))
+        self.timer_label.grid(row=2, column=1, padx=5)
         
+    def updateTime(self):
+        if self.isRecording:
+            minutes = self.seconds // 60
+            seconds = self.seconds % 60
+
+            if (minutes > 60):
+                hours = minutes // 60
+                minutes = minutes % 60
+            else:
+                hours = 0
+
+            time_str = f"{hours:02}:{minutes:02}:{seconds:02}"
+            self.timer_label.config(text=time_str)
+            self.window.after(1000, self.updateTime) # Update every 1 second
+            self.seconds += 1
+
     def clear(self):
+        self.seconds = 0
         self.isRecording = False
+        self.timer_label.config(text="00:00:00")
         self.screen_frames = []
         self.audio_frames = []    
         self.start_btn.config(state=tk.ACTIVE)
@@ -87,6 +109,7 @@ class TRec:
         self.isRecording = True  # Clear the event flag to start recording
         screen_thread = threading.Thread(target=self.record_screen)
         screen_thread.start()
+        self.updateTime()
      
       
     def stop_recording(self):
@@ -115,6 +138,7 @@ class TRec:
                 self.screen_frames.append(screenshot)  # Save the screenshot as frames
 
                 diff_time = time.time() - start_time
+
                 if diff_time < self.frame_time: # Ensure 10 FPS
                     time.sleep(self.frame_time - diff_time)
 
