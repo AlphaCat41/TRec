@@ -103,7 +103,6 @@ class TRec:
                 self.merge_audio_video()
 
             self.clear()
-
             tk.messagebox.showinfo("Info",  f"Video saved to '{self.save_dir}' successfully.")
 
 
@@ -121,9 +120,7 @@ class TRec:
 
         except Exception as e:
             tk.messagebox.showerror("Error",  f"{e}")
-
             self.clear()
-
             sys.exit(1)  # Exit with an error status
 
     def record_audio(self):
@@ -149,14 +146,12 @@ class TRec:
 
                 diff_time = time.time() - start_time
             
-                if diff_time > chunk / self.rate:
-                    time.sleep(diff_time - (chunk / self.rate))
+                if diff_time < self.frame_time: # Ensure 10 FPS
+                    time.sleep(self.frame_time - diff_time)
 
         except Exception as e:
             tk.messagebox.showerror("Error",  f"{e}")
-
             self.clear()
-
             sys.exit(1)  # Exit with an error status
             
         finally:
@@ -215,10 +210,8 @@ class TRec:
             subprocess.run(command, shell=True, check=True)
 
         except subprocess.CalledProcessError as e:
-            tk.messagebox.showerror("Error",  f"{e}")
-            
-            self.clear()
-            
+            tk.messagebox.showerror("Error",  f"{e}")        
+            self.clear()      
             sys.exit(1)
 
 if __name__ == "__main__":
