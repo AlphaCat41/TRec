@@ -8,7 +8,7 @@ Screen and audio recording program
 - [x] Cannot record the audio output (Fixed by use Stereo Mix)
 
 ## Dependencies
-1. FFmpeg (https://phoenixnap.com/kb/ffmpeg-windows) Extract in TRec folder
+1. FFmpeg (https://phoenixnap.com/kb/ffmpeg-windows)
 ## How to run
 1. install packages
 ```

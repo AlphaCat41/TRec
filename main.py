@@ -208,9 +208,8 @@ class TRec:
 
     def merge_audio_video(self):
         self.output_file = os.path.join(self.save_dir, "output_video.mp4")     
-        ffmpeg_path = os.getcwd() + "/ffmpeg/bin/ffmpeg.exe"
 
-        command = f'"{ffmpeg_path}" -y -i "{self.video_file}" -i "{self.audio_file}" -c:v copy -c:a aac "{self.output_file}"' # -y for overwrite video & audio
+        command = f'ffmpeg -y -i "{self.video_file}" -i "{self.audio_file}" -c:v copy -c:a aac "{self.output_file}"' # -y for overwrite video & audio
 
         try:
             subprocess.run(command, shell=True, check=True)
