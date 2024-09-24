@@ -11,6 +11,7 @@ import subprocess
 import os
 import wave
 import sys
+from pydub import AudioSegment
 
 class TRec:
     def __init__(self, window):
@@ -165,6 +166,13 @@ class TRec:
             stream.close()
             p.terminate()
 
+    # Amplify the Audio
+    def amplify_audio(self, input_file, output_file, increase_db=10):
+        sound = AudioSegment.from_wav(input_file)
+        louder_sound = sound + increase_db  # Increase volume by X decibels
+        louder_sound.export(output_file, format="wav")
+        self.audio_file = output_file
+
     def save_all_recording(self):
         self.isRecording = False
         
@@ -179,6 +187,9 @@ class TRec:
                 wf.setframerate(44100)
                 wf.writeframes(b''.join(self.audio_frames))
                 wf.close()
+
+                amplified_audio_file = os.path.join(self.save_dir, "audio.wav")
+                self.amplify_audio(self.audio_file, amplified_audio_file, increase_db=20)
 
             self.video_file = os.path.join(self.save_dir, "video.mp4")
             frame = self.screen_frames[0]
