@@ -18,6 +18,7 @@ class TRec:
         window.title('TRec')
         window.geometry("400x100")
         self.fps = 10
+        self.rate = 44100  # Record at 44100 samples per second
         self.frame_time = 1 / self.fps
 
         self.isRecording = None 
@@ -108,16 +109,15 @@ class TRec:
 
     def record_audio(self):
         # PyAudio setup
-        chunk = 1024  # Record in chunks of 1024 samples
         format = pyaudio.paInt16  # 16 bits per sample
         channels = 2
-        rate = 44100  # Record at 44100 samples per second
+        chunk = int(self.rate / self.fps)  # Record in chunks of 1024 samples
 
         try:
             p = pyaudio.PyAudio()
             stream = p.open(format=format,
                             channels=channels,
-                            rate=rate,
+                            rate=self.rate,
                             input=True,
                             frames_per_buffer=chunk)
             

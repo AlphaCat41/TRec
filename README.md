@@ -1,7 +1,8 @@
 # TRec
 Screen and audio recording program
 ## Bugs
-- [ ] Unsynchronized between audio and video
+- [x] Unsynchronized between audio and video (Fixed by Calculate CHUNK_SIZE)
+    - CHUNK_SIZE = RATE / FPS [samples / frame]
 - [x] Cannot record the audio output (Fixed by Enable Stereo Mix)
 ## How to Enable Stereo Mix (Windows):
 1. Right-click the Sound Icon in the system tray.
