@@ -218,6 +218,8 @@ class TRec:
             tk.messagebox.showerror("Error",  f"{e}")
             
             self.clear()
+            
+            sys.exit(1)
 
 if __name__ == "__main__":
     window = tk.Tk()
