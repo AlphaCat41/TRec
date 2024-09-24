@@ -2,7 +2,7 @@
 Screen and audio recording program
 ## Bugs
 - [ ] Unsynchronized between audio and video
-- [x] Cannot record sound in screen (Fixed by Enable Stereo Mix)
+- [x] Cannot record the audio output (Fixed by Enable Stereo Mix)
 ## How to Enable Stereo Mix (Windows):
 1. Right-click the Sound Icon in the system tray.
 2. Select "Sounds".
