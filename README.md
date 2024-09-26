@@ -1,5 +1,7 @@
 # TRec
-Screen and audio recording program
+Screen and audio recording program! \
+![Screenshot_1](https://github.com/user-attachments/assets/ea438183-af33-4da7-9295-1ec03d0290ba)
+
 ## Bugs
 - [x] Unsynchronized between audio and video (Fixed by Calculate CHUNK_SIZE)
     - CHUNK_SIZE = RATE / FPS [samples / frame]
