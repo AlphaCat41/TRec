@@ -8,7 +8,8 @@ Screen and audio recording program
 - [x] Cannot record the audio output (Fixed by use Stereo Mix)
 
 ## Requirements
-1. FFmpeg (https://phoenixnap.com/kb/ffmpeg-windows)
+1. Python 3.11.5
+2. FFmpeg (https://phoenixnap.com/kb/ffmpeg-windows)
 ## How to run
 1. install packages
 ```
