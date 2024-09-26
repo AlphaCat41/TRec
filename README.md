@@ -7,7 +7,7 @@ Screen and audio recording program
         - Video Frame Rate (FPS) = 30 frames per second (typical video frame rate). 
 - [x] Cannot record the audio output (Fixed by use Stereo Mix)
 
-## Dependencies
+## Requirements
 1. FFmpeg (https://phoenixnap.com/kb/ffmpeg-windows)
 ## How to run
 1. install packages
